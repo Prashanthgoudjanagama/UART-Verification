@@ -1,8 +1,7 @@
 ﻿# UART-VERIFICATION -> specification of UART:
 
 ## Documents used in the project:
-    -> 
-    ->
+    -> CYPRESS PSOC
 
 
 ## Specs:
@@ -111,6 +110,7 @@
         ->  This removes the rounding error entirely and gives a 0.00% baud rate error.
 
     
+
 
 
 
