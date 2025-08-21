@@ -1,6 +1,4 @@
-﻿# UART-VERIFICATION
-
-# specification of UART:
+﻿# UART-VERIFICATION -> specification of UART:
 
 ## Documents used in the project:
     -> 
@@ -113,4 +111,5 @@
         ->  This removes the rounding error entirely and gives a 0.00% baud rate error.
 
     
+
 
