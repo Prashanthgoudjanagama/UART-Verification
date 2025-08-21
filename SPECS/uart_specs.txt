@@ -1,0 +1,123 @@
+
+
+specification of UART:
+_______________________________________________________________________________________________
+
+* Documents used in the project:
+    -> CYPRESS PSOC.
+
+_______________________________________________________________________________________________
+
+Specs:
+
+    1. UART - UNIVERSAL ASYNCHRONOUS RECEIVER TRANSMITTER.
+    2. It is a serial communication protocol used for asynchronous serial communication.
+    3. It allows for full-duplex communication, meaning data can be sent and received simultaneously.
+    4. UART uses two wires for communication: 
+            i. one for transmitting data (TX).
+            ii. one for receiving data (RX).
+    5. Unlike synchronous protocols, UART does not require a clock signal for synchronization.
+    6. Data is sent in frames, which typically consist of:
+            i. Start bit: Indicates the beginning of a frame.
+            ii. Data bits: Usually 5 to 9 bits of actual data.
+            iii. Parity bit (optional): Used for error checking.
+            iv. Stop bit(s): Indicates the end of a frame, typically one or two bits.
+
+________________________________________________________________________________________________
+
+
+Serial Communication:
+    -> Serial communication transmits data one bit at a time over a single channel.
+    -> It differs from parallel communication, which sends multiple bits at once.
+    -> Serial communication is more efficient for long-distance and low-pin-count applications.
+    -> UART (Universal Asynchronous Receiver/Transmitter) is a type of serial communication.
+    -> UART is asynchronous, meaning it does not use a shared clock between sender and receiver.
+    -> Both sender and receiver agree on timing parameters, such as baud rate, before communication begins.
+
+________________________________________________________________________________________________
+
+UART FRAME STRUCTURE:
+    -> A UART frame consists of several components:
+        i. Start Bit: Indicates the beginning of a frame.
+        ii. Data Bits: Usually 5 to 9 bits of actual data.
+        iii. Parity Bit (optional): Used for error checking.
+        iv. Stop Bit(s): Indicates the end of a frame, typically one or two bits.
+
+    -> frame format:
+    =======> image <===================
+
+        +-------+----+----+----+----+----+----+----+----+----+--------+-------+-------+
+        | START | D0 | D1 | D2 | D3 | D4 | D5 | D6 | D7 | D8 | PARITY | STOP1 | STOP2 |
+        +-------+----+----+----+----+----+----+----+----+----+--------+-------+-------+
+
+        1. START: The start bit signals the beginning of a frame. It is typically a low signal.
+        2. DATA: The data bits contain the actual information being transmitted. 
+                 The number of data bits can vary (usually 5 to 9).
+        3. PARITY: The optional parity bit is used for error detection. It can be even, odd, or none.
+        4. STOP: The stop bit(s) indicate the end of a frame. It is typically a high signal.
+
+________________________________________________________________________________________________
+
+KEY FEATURES:
+
+    1. Asynchronous transmission (no clock needed).
+    2. Full duplex communication via Tx and Rx pins.
+    3. Buad rate agreement required ai both ends.
+    4. Data framing and oversampling.
+
+________________________________________________________________________________________________
+
+
+BUADRATE GENERATION:
+
+    -> NO of symbols (bits) transmitted per second is called "BUAD-RATE".
+    
+                Divisor = fclk / buad_rate
+
+    -> To sending precise sampling bits we will use this divisor at both the ends.
+
+    -> UART is asynchronous, so we don't have clock to synchronize both Txr and Rxr.
+       So we will maintain a same buad rate at the both ends to get exact data.
+
+    -> We use Oversampling technique for the data transmission.
+
+    -> Oversampling: we use 16x or 8x.
+        * 16x oversampling means the receiver samples the RX line 16 times per bit period.
+
+    -> When it detects a falling edge (start bit), it waits 8-clock cycles (mid-point of the bit) 
+       to sample the value. It then continues sampling every 16-clocks to read the rest of the bits.
+
+    =======> image <=================== 2.2
+
+BUADRATE ERROR:
+
+    actual_buadrate = fclk / (divisor x oversampling)  
+
+        :: here overesampling may be 16x or 8x and divisor is a proper integer.
+           so the actual buadrate will not match the exact one.
+        
+        :: below table tells us error buad rate analysis
+
+        +-----------+---------------+------------------+----------+
+        | Baud Rate | Divisor Value | Actual Baud Rate | Error (%)|
+        +-----------+---------------+------------------+----------+
+        |   2400    |     3906      |     2400.154     |   0.01   |
+        |   4800    |     1953      |     4800.372     |   0.01   |
+        |   9600    |     977       |     9595.701     |  -0.04   |
+        |  19200    |     488       |     19211.066    |   0.06   |
+        |  38400    |     244       |     38422.131    |   0.06   |
+        |  56000    |     167       |     56137.725    |   0.25   |
+        | 128000    |     73        |     129807.7     |   0.33   |
+        | 3000000   |      3        |     3125000      |   4.00   |
+        +-----------+---------------+------------------+----------+
+
+        :: if baudrate error is more than > 2% then it is not acceptable.
+        :: we will only use baudrate error < 2%.
+
+    note:
+        -> If soc has a 100MHz system clock and you need 9600bps with 16× oversampling 
+           (i.e., 153.6 kHz), the DCM/PLL can generate exactly 153.6 kHz.
+        ->  This removes the rounding error entirely and gives a 0.00% baud rate error.
+________________________________________________________________________________________________
+
+    
