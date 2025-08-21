@@ -10,14 +10,14 @@
     2. It is a serial communication protocol used for asynchronous serial communication.
     3. It allows for full-duplex communication, meaning data can be sent and received simultaneously.
     4. UART uses two wires for communication: 
-            i. one for transmitting data (TX).
-            ii. one for receiving data (RX).
+        i. one for transmitting data (TX).
+        ii. one for receiving data (RX).
     5. Unlike synchronous protocols, UART does not require a clock signal for synchronization.
     6. Data is sent in frames, which typically consist of:
-            i. Start bit: Indicates the beginning of a frame.
-            ii. Data bits: Usually 5 to 9 bits of actual data.
-            iii. Parity bit (optional): Used for error checking.
-            iv. Stop bit(s): Indicates the end of a frame, typically one or two bits.
+        i. Start bit: Indicates the beginning of a frame.
+        ii. Data bits: Usually 5 to 9 bits of actual data.
+        iii. Parity bit (optional): Used for error checking.
+        iv. Stop bit(s): Indicates the end of a frame, typically one or two bits.
 
 
 
@@ -65,19 +65,16 @@
                 Divisor = fclk / buad_rate
 
     -> To sending precise sampling bits we will use this divisor at both the ends.
-
     -> UART is asynchronous, so we don't have clock to synchronize both Txr and Rxr.
        So we will maintain a same buad rate at the both ends to get exact data.
-
     -> We use Oversampling technique for the data transmission.
-
     -> Oversampling: we use 16x or 8x.
         * 16x oversampling means the receiver samples the RX line 16 times per bit period.
-
     -> When it detects a falling edge (start bit), it waits 8-clock cycles (mid-point of the bit) 
        to sample the value. It then continues sampling every 16-clocks to read the rest of the bits.
 
-    <img width="955" height="515" alt="Screenshot 2025-08-21 095359" src="https://github.com/user-attachments/assets/3263318d-71fd-4efc-aa4d-040aa19ae671" />
+  <img width="955" height="515" alt="Screenshot 2025-08-21 095359" src="https://github.com/user-attachments/assets/028ebc69-0666-4e8c-82e5-f6c12884f1a8" />
+
 
 
 ## BUADRATE ERROR:
@@ -111,6 +108,7 @@
         ->  This removes the rounding error entirely and gives a 0.00% baud rate error.
 
     
+
 
 
 
