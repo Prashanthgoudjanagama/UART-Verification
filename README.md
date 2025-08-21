@@ -78,7 +78,7 @@
     -> When it detects a falling edge (start bit), it waits 8-clock cycles (mid-point of the bit) 
        to sample the value. It then continues sampling every 16-clocks to read the rest of the bits.
 
-    =======> image <=================== 2.2
+    [![UART Frame](C:\Users\prash\OneDrive\Pictures\Screenshots\Screenshot 2025-08-21 095359.png)](https://github.com/Prashanthgoudjanagama/UART-Verification.git)
 
 ## BUADRATE ERROR:
 
@@ -111,5 +111,6 @@
         ->  This removes the rounding error entirely and gives a 0.00% baud rate error.
 
     
+
 
 
